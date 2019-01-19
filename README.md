@@ -54,7 +54,7 @@ sudo mv highquality-fy /usr/bin
 
 ### Uninstall:
 
-1) Download it:
+1) Run it:
 ```bash
 sudo rm /usr/bin/highquality-fy
 ```
