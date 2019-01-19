@@ -1,0 +1,57 @@
+#!/usr/bin/env bash
+
+if [ "$1" = "" ]; then
+  echo -e "Usage: highquality-fy filename [resolution]\n"
+  echo "[resolution] is a optional argument and follow the format"
+  echo -e "wxh for example 1360x768\n"
+  echo -e "The following aliases is available:\n"
+  echo "hd     --------------> 1280x720"
+  echo -e "fullhd --------------> 1920×1080\n\n"
+  exit 1
+fi
+
+# Create dir in /tmp for temporary files
+WORKING_DIR=$(mktemp)
+OLD_DIR="$PWD"
+rm "$WORKING_DIR"
+mkdir -p "$WORKING_DIR"
+
+function catchError() {
+  echo -ne "failed\n"
+  rm -rf "$WORKING_DIR"
+  exit 1
+}
+
+#Copy file to temp dir
+cp "$1" $WORKING_DIR/image_original.png || catchError
+
+#Enter in temp dir
+cd $WORKING_DIR
+
+RESOLUTION="$2"
+
+if [ "$2" = "" ]; then
+  RESOLUTION="1280x720"
+fi
+
+if [ "$2" = "hd" ]; then
+  RESOLUTION="1280x720"
+fi
+
+if [ "$2" = "fullhd" ]; then
+  RESOLUTION="1920×1080"
+fi
+
+echo -n "Making Background..."
+convert image_original.png  -resize $RESOLUTION\!  background.png || catchError
+echo -ne "ok\nApplying Blur to background..."
+convert -blur 0x64 background.png background.png || catchError
+echo -ne "ok\nAdding Shadow to image..."
+convert image_original.png \( +clone -background black -shadow 80x3+0+0 \) +swap -background transparent -layers merge +repage overlay.png || catchError
+echo -ne "ok\nLayering background and image..."
+composite -gravity center overlay.png background.png output.jpg || catchError
+echo -e "ok"
+cd $OLD_DIR || catchError
+
+mv $WORKING_DIR/output.jpg ${1%.*}-hq-out.jpg || catchError
+rm -rf "$WORKING_DIR"
