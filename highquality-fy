@@ -2,6 +2,10 @@
 
 LANG__="$(echo $LANG | cut -c 1-2)"
 
+SCRIPT="$(readlink -f "$0")"
+SCRIPTPATH="$(dirname "$SCRIPT")"
+ICON_DIR="$(dirname "$SCRIPTPATH")/share/icons/hicolor/scalable/highquality-fy.svg"
+
 function toPortuguese(){
   image_lbl="Imagem"
   image_required_lbl="Para prosseguir é preciso escolher uma imagem"
@@ -34,8 +38,6 @@ function toSpanish(){
 
 toEnglish
 
-echo "$LANG__"
-
 if [ "$LANG__" = "pt" ]; then
    toPortuguese
 fi
@@ -54,7 +56,7 @@ function getDATA() {
               yad --form \
                   --center \
                   --fixed \
-                  --window-icon=tools-wizard \
+                  --window-icon="$ICON_DIR" \
                   --title="Highquality-fy" \
                   --text="$1" \
                   --borders=32 \
@@ -97,7 +99,7 @@ function getResolution() {
               yad --form \
                   --center \
                   --fixed \
-                  --window-icon=tools-wizard \
+                  --window-icon="$ICON_DIR" \
                   --title="Highquality-fy" \
                   --text="$type_resolution:\n" \
                   --borders=32 \
@@ -125,7 +127,7 @@ function catchError() {
          --fixed \
          --title="Highquality-fy" \
          --width=480 \--borders=32 \
-         --window-icon=tools-wizard \
+         --window-icon="$ICON_DIR" \
          --text="<b>$error_ocurred_title</b>\n$error_ocurred_message\n"
   fi
   echo -ne "failed\n"
@@ -187,7 +189,7 @@ if [ "$USE_GUI" = "Y" ]; then
        --fixed \
        --title="Highquality-fy" \
        --width=480 \--borders=32 \
-       --window-icon=tools-wizard \
+       --window-icon="$ICON_DIR" \
        --text="<b>$image_created_lbl</b>\n${FILE%.*}-hq-out.jpg\n"
        
    rm -rf "$WORKING_DIR"
