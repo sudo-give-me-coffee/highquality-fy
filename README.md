@@ -16,7 +16,7 @@ After
 
 3. Have fun!
 
-[Alternatively download DEB and install it](https://github.com/sudo-give-me-coffee/highquality-fy/releases/download/DEB/highquality-fy.deb)
+[Alternatively download DEB and install it](https://bintray.com/sudo-give-me-coffee/filter-apps/download_file?file_path=highquality-fy.deb)
 
 <hr>
 
