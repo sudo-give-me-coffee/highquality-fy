@@ -1,32 +1,200 @@
 #!/usr/bin/env bash
 
-if [ "$1" = "" ]; then
-  echo -e "Usage: highquality-fy filename [resolution]\n"
-  echo "[resolution] is a optional argument and follow the format"
-  echo -e "wxh for example 1360x768\n"
-  echo -e "The following aliases is available:\n"
-  echo "hd     --------------> 1280x720"
-  echo -e "fullhd --------------> 1920×1080\n\n"
-  exit 1
+LANG__="$(echo $LANG | cut -c 1-2)"
+
+function toPortuguese(){
+  image_lbl="Imagem"
+  image_required_lbl="Para prosseguir é preciso escolher uma imagem"
+  image_created_lbl="Imagem criada com sucesso em"
+  resolution_lbl="Resolução"
+  type_resolution="Digite a Resolução desejada"
+  error_ocurred_title="Ocorreu um erro"
+  error_ocurred_message="A imagem pode estar corrompida ou você forneceu uma\n resolução inválida"
+}
+
+function toEnglish(){
+  image_lbl="Image"
+  image_required_lbl="To proceed you must choose an image"
+  image_created_lbl="Image created successfully in"
+  resolution_lbl="Resolution"
+  type_resolution="Type the desired Resolution"
+  error_ocurred_title="An error has occurred"
+  error_ocurred_message="The image may be corrupted or you have given an\ninvalid resolution"
+}
+
+function toSpanish(){
+  image_lbl="Imagen"
+  image_required_lbl="Para proseguir es necesario elegir una imagen"
+  image_created_lbl="Imagen creada con éxito en"
+  resolution_lbl="Resolución"
+  type_resolution="Introduzca la resolución deseada"
+  error_ocurred_title="Ocurrio un error"
+  error_ocurred_message="La imagen puede estar dañada o ha proporcionado una\n resolución no válida"
+}
+
+toEnglish
+
+echo "$LANG__"
+
+if [ "$LANG__" = "pt" ]; then
+   toPortuguese
 fi
 
-# Create dir in /tmp for temporary files
+if [ "$LANG__" = "es" ]; then
+   toSpanish
+fi
+
 WORKING_DIR=$(mktemp)
 OLD_DIR="$PWD"
 rm "$WORKING_DIR"
 mkdir -p "$WORKING_DIR"
 
+function getDATA() {
+   FORM=$(
+              yad --form \
+                  --center \
+                  --fixed \
+                  --window-icon=tools-wizard \
+                  --title="Highquality-fy" \
+                  --text="$1" \
+                  --borders=32 \
+                  --width=480 \
+                  --field="$image_lbl:":FL "$(xdg-user-dir PICTURES)" \
+                  --field="$resolution_lbl:      ":CB 720p!1080p!Custom \
+                  --field=" ":LBL \
+                  --image-filter="Images" \
+                  --class=hiquality-fy --name=hiquality-fy \
+                  --add-preview || echo exit
+         ) 
+         
+   if [ "$FORM" = "exit" ]; then
+      exit 1
+   fi
+
+   FILE=$(echo "$FORM" | cut -d"|" -f 1)
+   RESOLUTION=$(echo "$FORM" | cut -d"|" -f 2)
+    
+   if [ "$FILE" = "$(xdg-user-dir PICTURES)" ]; then
+      getDATA "<b>$image_required_lbl</b>\n\n"
+   fi
+   
+   if [ "$RESOLUTION" = "720p" ]; then
+      RESOLUTION="1280x720"
+   fi
+
+   if [ "$RESOLUTION" = "1080p" ]; then
+      RESOLUTION="1920×1080"
+   fi
+   
+   if [ "$RESOLUTION" = "Custom" ]; then
+      getResolution
+   fi
+   
+}
+
+function getResolution() {
+   FORM=$(
+              yad --form \
+                  --center \
+                  --fixed \
+                  --window-icon=tools-wizard \
+                  --title="Highquality-fy" \
+                  --text="$type_resolution:\n" \
+                  --borders=32 \
+                  --columns=2 \
+                  --width=480 \
+                  --field="":NUM 1280 \
+                  --field=" ":LBL ""\
+                  --field="":NUM 720 \
+                  --class=hiquality-fy --name=hiquality-fy || echo exit
+         )      
+           
+   if [ "$FORM" = "exit" ]; then
+      getDATA
+   fi
+   
+   RESOLUTION="$(echo "$FORM" | cut -d"|" -f 1)x$(echo "$FORM" | cut -d"|" -f 3)"
+}
+
 function catchError() {
+  if [ "$USE_GUI" = "Y" ]; then
+    yad  --button=gtk-close \
+         --image=error \
+         --image-on-top\
+         --center \
+         --fixed \
+         --title="Highquality-fy" \
+         --width=480 \--borders=32 \
+         --window-icon=tools-wizard \
+         --text="<b>$error_ocurred_title</b>\n$error_ocurred_message\n"
+  fi
   echo -ne "failed\n"
   rm -rf "$WORKING_DIR"
   exit 1
 }
 
-#Copy file to temp dir
-cp "$1" $WORKING_DIR/image_original.png || catchError
 
-#Enter in temp dir
-cd $WORKING_DIR
+
+function genImage() {
+  cp "$FILE" $WORKING_DIR/image_original.png || catchError
+  cd $WORKING_DIR
+  echo -n "Making Background..."
+  convert image_original.png  -resize $RESOLUTION\!  background.png || catchError
+  echo -ne "ok\nApplying Blur to background..."
+  convert -blur 0x64 background.png background.png || catchError
+  echo -ne "ok\nAdding Shadow to image..."
+  convert image_original.png \( +clone -background black -shadow 80x3+0+0 \) +swap -background transparent -layers merge +repage overlay.png ||catchError
+  echo -ne "ok\nLayering background and image..."
+  composite -gravity center overlay.png background.png output.jpg || catchError
+  echo -e "ok"
+  cd $OLD_DIR || catchError
+
+  mv $WORKING_DIR/output.jpg ${FILE%.*}-hq-out.jpg || catchError
+  rm -rf "$WORKING_DIR"
+}
+
+if [ "$1" = "" ]; then
+  USE_GUI="Y"
+fi
+
+if [ "$1" = "--help" ]; then
+  echo -e "Usage: highquality-fy filename [resolution]\n"
+  echo "[resolution] is a optional argument and follow the format"
+  echo -e "wxh for example 1360x768\n"
+  echo -e "The following aliases is available:\n"
+  echo "720p      --------------> 1280x720"
+  echo -e "1080p --------------> 1920×1080\n\n"
+  exit 1
+fi
+
+if [ "$USE_GUI" = "Y" ]; then
+   cd $(xdg-user-dir PICTURES)
+   getDATA
+   genImage | yad --progress \
+                  --class=hiquality-fy --name=hiquality-fy \
+                  --borders=32 \
+                  --width=480 \
+                  --text="Criando imagem..."  \
+                  --pulsate --auto-close --progress-text=" " \
+                  --no-buttons \
+                  --window-icon=tools-wizard \
+                  --title="Highquality-fy" \
+                  --center \
+                  --fixed
+                  
+   yad --button=gtk-ok \
+       --center \
+       --fixed \
+       --title="Highquality-fy" \
+       --width=480 \--borders=32 \
+       --window-icon=tools-wizard \
+       --text="<b>$image_created_lbl</b>\n${FILE%.*}-hq-out.jpg\n"
+       
+   rm -rf "$WORKING_DIR"
+   exit 0
+fi
+
+FILE="$1"
 
 RESOLUTION="$2"
 
@@ -42,16 +210,7 @@ if [ "$2" = "fullhd" ]; then
   RESOLUTION="1920×1080"
 fi
 
-echo -n "Making Background..."
-convert image_original.png  -resize $RESOLUTION\!  background.png || catchError
-echo -ne "ok\nApplying Blur to background..."
-convert -blur 0x64 background.png background.png || catchError
-echo -ne "ok\nAdding Shadow to image..."
-convert image_original.png \( +clone -background black -shadow 80x3+0+0 \) +swap -background transparent -layers merge +repage overlay.png || catchError
-echo -ne "ok\nLayering background and image..."
-composite -gravity center overlay.png background.png output.jpg || catchError
-echo -e "ok"
-cd $OLD_DIR || catchError
+genImage
 
-mv $WORKING_DIR/output.jpg ${1%.*}-hq-out.jpg || catchError
 rm -rf "$WORKING_DIR"
+exit 0
