@@ -6,6 +6,8 @@ SCRIPT="$(readlink -f "$0")"
 SCRIPTPATH="$(dirname "$SCRIPT")"
 ICON_DIR="$(dirname "$SCRIPTPATH")/share/icons/hicolor/scalable/highquality-fy.svg"
 
+PATH="$PATH:$SCRIPTPATH"
+
 function toPortuguese(){
   image_lbl="Imagem"
   image_required_lbl="Para prosseguir é preciso escolher uma imagem"
@@ -179,7 +181,7 @@ if [ "$USE_GUI" = "Y" ]; then
                   --text="Criando imagem..."  \
                   --pulsate --auto-close --progress-text=" " \
                   --no-buttons \
-                  --window-icon=tools-wizard \
+                  --window-icon="$ICON_DIR" \
                   --title="Highquality-fy" \
                   --center \
                   --fixed
