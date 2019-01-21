@@ -62,9 +62,7 @@ If you run without parameters, a graphical wizard will start
 
 ### Dependencies:
 * imagemagick
-* yad (only if you use GUI)
-> An AppImage will be provided to dispense dependencies
-
+* yad (only if you want use GUI)
 
 ## TODO:
 - [x] The script
