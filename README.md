@@ -16,6 +16,7 @@ After
 
 3. Have fun!
 
+[Alternatively download DEB and install it](https://github.com/sudo-give-me-coffee/highquality-fy/releases/download/DEB/highquality-fy.deb)
 
 <hr>
 
@@ -63,13 +64,6 @@ If you run without parameters, a graphical wizard will start
 ### Dependencies:
 * imagemagick
 * yad (only if you want use GUI)
-
-## TODO:
-- [x] The script
-- [x] This ReadME
-- [x] A GUI tool
-- [ ] A DEB Package
-- [x] AppImage with dependencies
 
 ## **Material reference**:
 
