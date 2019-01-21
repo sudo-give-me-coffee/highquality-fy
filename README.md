@@ -23,17 +23,18 @@ Preset | Resolution
 hd | **1280x720**
 fullhd | **1920×1080**
 
-
+If you run without parameters, a graphical wizard will start
 
 ### Dependencies:
 * imagemagick
+* yad (only if you use GUI)
 > An AppImage will be provided to dispense dependencies
 
 
 ### TODO:
 - [x] The script
 - [x] This ReadME
-- [ ] A GUI tool
+- [x] A GUI tool
 - [ ] A DEB Package
 - [ ] AppImage with dependencies
 
