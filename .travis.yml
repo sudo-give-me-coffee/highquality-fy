@@ -1,0 +1,36 @@
+language: generic
+dist: trusty
+
+script:
+ - URL=$(wget -q "https://github.com/ImageMagick/ImageMagick/releases" -O - | grep "gcc-x86_64.AppImage" | head -n 1 | cut -d '"' -f 2)
+ - wget -c "https://github.com/$URL"
+ - chmod +x ./ImageMagick-*.AppImage
+ - ./ImageMagick-*.AppImage --appimage-extract
+ - wget -c "http://mirrors.kernel.org/ubuntu/pool/universe/y/yad/yad_0.27.0-1.1_amd64.deb"
+ - mv yad*.deb squashfs-root/
+ - cd squashfs-root/
+ - ar x yad*.deb
+ - tar -xJf data.tar.xz ./
+ - rm control.tar.gz
+ - rm data.tar.xz
+ - rm debian-binary
+ - rm yad*.deb
+ - cd ..
+ - cp highquality-fy squashfs-root/usr/bin/
+ - chmod +x squashfs-root/usr/bin/highquality-fy
+ - sed -i -e 's|usr/bin/magick|usr/bin/highquality-fy|g' squashfs-root/AppRun
+ - cp highquality-fy.desktop squashfs-root/
+ - rm squashfs-root/imagemagick.desktop
+ - wget https://github.com/AppImage/AppImageKit/releases/download/continuous/appimagetool-x86_64.AppImage
+ - chmod +x ./appimagetool-x86_64.AppImage
+ - ./appimagetool-x86_64.AppImage -g squashfs-root/
+ - mv Highquality-fy*-x86_64.AppImage Highquality-fy-x86_64.AppImage
+
+after_success:
+  - wget -c https://github.com/probonopd/uploadtool/raw/master/upload.sh
+  - bash upload.sh Highquality-fy*-x86_64.AppImage*
+  
+branches:
+  except:
+    - # Do not build tags that we create when we upload to GitHub Releases
+    - /^(?i:continuous)/
