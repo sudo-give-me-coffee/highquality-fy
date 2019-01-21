@@ -1,5 +1,5 @@
-## highquality-fy | [**Download**](https://github.com/sudo-give-me-coffee/highquality-fy/releases/download/continuous/Highquality-fy-x86_64.AppImage)
-Turn your small size pictures into masterpieces. This tool creates a blurry background with HD quality (or any quality that you want) and add a layer with original image on top of it, see the example:
+## highquality-fy | [**Download**](https://github.com/sudo-give-me-coffee/highquality-fy/releases/download/continuous/Highquality-fy-x86_64.AppImage) 
+[Application screenshots](https://github.com/sudo-give-me-coffee/highquality-fy/blob/master/screenshots/screenshots.md). Turn your small size pictures into masterpieces. This tool creates a blurry background with HD quality (or any quality that you want) and add a layer with original image on top of it, see the example:
 
 ![Image: original](https://github.com/sudo-give-me-coffee/highquality-fy/raw/master/example/example.jpg)
 
