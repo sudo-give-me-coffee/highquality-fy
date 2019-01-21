@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=Highquality-fy
+Type=Application
+Exec=highquality-fy
+Icon=imagemagick
+Comment=Turn your small size pictures into masterpieces
+Comment[pt]=Transforme suas imagens pequenas em obras-primas
+Comment[es]=Transforme sus imágenes pequeñas en obras maestras
+Categories=Graphics;
+Terminal=false
