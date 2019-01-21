@@ -1,4 +1,4 @@
-## highquality-fy  |  [**Download**](https://github.com/sudo-give-me-coffee/highquality-fy/releases/download/continuous/Highquality-fy-x86_64.AppImage)
+## highquality-fy | [**Download**](https://github.com/sudo-give-me-coffee/highquality-fy/releases/download/continuous/Highquality-fy-x86_64.AppImage)
 Turn your small size pictures into masterpieces. This tool creates a blurry background with HD quality (or any quality that you want) and add a layer with original image on top of it, see the example:
 
 ![Image: original](https://github.com/sudo-give-me-coffee/highquality-fy/raw/master/example/example.jpg)
@@ -89,7 +89,5 @@ Simply, first that pre existing tool exist officially only for elementary os, an
 
 In this tool no, but open an issue with describing filter that i will try create a tool that apply it
 
-- **You already provide an AppImage... why make a DEB package?**
-
-The DEB will be added to the OS App Center element with the "pay what you want" system is a way to help elementary OS and me
-
+<hr>
+  
