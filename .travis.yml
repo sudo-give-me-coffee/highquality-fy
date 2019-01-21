@@ -11,7 +11,8 @@ script:
  - cd squashfs-root/
  - wget -c "https://raw.githubusercontent.com/sudo-give-me-coffee/highquality-fy/master/highquality-fy.svg"
  - mkdir -p usr/share/icons/hicolor/scalable
- - mv highquality-fy.svg usr/share/icons/hicolor/scalable/
+ - cp highquality-fy.svg usr/share/icons/hicolor/scalable/
+ - mv highquality-fy.svg .DirIcon
  - ar x yad*.deb
  - tar -xJf data.tar.xz ./
  - rm control.tar.gz
