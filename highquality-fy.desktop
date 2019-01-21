@@ -2,7 +2,7 @@
 Name=Highquality-fy
 Type=Application
 Exec=highquality-fy %f
-Icon=/usr/share/icons/hicolor/scalable/highquality-fy.svg
+Icon=/usr/share/icons/hicolor/scalable/highquality-fy
 Comment=Turn your small size pictures into masterpieces
 Comment[pt]=Transforme suas imagens pequenas em obras-primas
 Comment[es]=Transforme sus imágenes pequeñas en obras maestras
