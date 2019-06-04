@@ -50,7 +50,7 @@ sudo rm /usr/bin/highquality-fy
 ```bash
 highquality-fy filename [resolution]
 ```
-`[resolution]` is optional and follow format **w**x**y** for example **1360x768** by default **1280x720** is used
+`[resolution]` is optional and follow format "**width** x **height**" for example **1360x768** (by default **1280x720** is used)
 
 Preset on this version:
 
@@ -73,15 +73,14 @@ If you run without parameters, a graphical wizard will start
 ## FAQ
 - **Will you provide a flatpak?**
 
-No, Flatpak is a worst way to distribute application, but if you want you can make it
+No, i don't like Flatpak, but if you want you can make it
 
 - **Already exist a tool to do it... why make another?**
 
-Simply, first that pre existing tool exist officially only for elementary os, and the tool uses a deprecated functions from GTK, so his existence is in risk
+Simply, first that pre existing tool exist officially only for elementaryOS, and the tool uses deprecated functions.
 
 - **Will you add more filters?**
-
-In this tool no, but open an issue with describing filter that i will try create a tool that apply it
+Maybe, open an issue with the filter description, i will try create a way to apply it
 
 <hr>
   
